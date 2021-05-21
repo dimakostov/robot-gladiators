@@ -1,6 +1,16 @@
+var getPlayerName = function(){
+var name = "";
+
+while(name === "" || name === null){
+    name = prompt("What is your robot's name?");
+}
+
+return name;
+}
+
 var playerInfo = {
 
-    name: window.prompt("What is your robot's name?"),
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -26,19 +36,11 @@ console.log(playerInfo.name, playerInfo.attack, playerInfo.health);
 var fight = function(enemy) {
     while (playerInfo.health > 0 && enemy.health > 0) {
         
-        var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-
-        if(promptFight.toLowerCase() === "skip"){
-            
-            var confirmSkip= window.confirm("Are you sure you'd like to quit");
-            
-            if (confirmSkip) {
-                window.alert(playerInfo.name + " has chosen to skip the fight!");
-                
-                playerInfo.money = Math.max(0, playerInfo.money - 10);
+            //fightOrSkip();
+            if (fightOrSkip()) {
                 break;
             }
-        }
+        
             console.log("fight");
             var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
             enemy.health = Math.max(0, enemy.health - damage);
@@ -169,6 +171,30 @@ var enemyInfo = [
     attack: randomNumber(10, 14),
     }
 ];
+
+var fightOrSkip = function(){
+
+    var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
+
+    if(promptFight === "" || promptFight === null){
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    if(promptFight.toLowerCase() === "skip"){
+        
+        var confirmSkip= window.confirm("Are you sure you'd like to quit");
+        
+        if (confirmSkip) {
+            window.alert(playerInfo.name + " has chosen to skip the fight!");
+            
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            shop();
+            return true;
+        }
+    }
+    return false;
+}
 
 
 startGame();
