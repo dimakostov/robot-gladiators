@@ -11,11 +11,11 @@ return name;
 var playerInfo = {
 
     name: getPlayerName(),
-    health: 100,
+    health: 200,
     attack: 10,
     money: 10,
     reset: function() {
-        this.health = 100;
+        this.health = 200;
         this.money = 10;
         this.attack = 10;
     },
@@ -34,13 +34,13 @@ console.log(playerInfo.name, playerInfo.attack, playerInfo.health);
 
 
 var fight = function(enemy) {
-
+    var isPlayerTurn = true;
     if(Math.random() > .5){
         isPlayerTurn = false;
     }
 
     while (playerInfo.health > 0 && enemy.health > 0) {
-            var isPlayerTurn = true;
+
             //fightOrSkip();
             if(isPlayerTurn){
             if (fightOrSkip()) {
@@ -74,6 +74,8 @@ var fight = function(enemy) {
             }
         
         }
+
+        isPlayerTurn = !isPlayerTurn;
         }
         
     
@@ -108,15 +110,29 @@ var startGame = function(){
 };
 
 var endGame = function() {
-    window.alert("Let's see how you did!");
+    window.alert("The game has ended. Let's see how you did!");
 
-    if (playerInfo.health > 0) {
-        window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money);
+    var highScore = localStorage.getItem("highscore");
+
+    if (highScore === null) {
+        highScore = 0
+    }
+    console.log(highScore);
+    if (playerInfo.money > highScore) {
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+
+        alert(playerInfo.name + " now has a score of " + playerInfo.money);
     }
     else{
-        window.alert("You've lost your robot in battle.");
+        if (playerInfo.health <= 0) {
+            alert("You have lost you robot in battle better luck next time!");
+        }else{
+        alert(playerInfo.name + " did not beat the high score of " + highScore + ". Maybe next time!");
+        }
     }
 
+    console.log(highScore);
     var playAgainConfirm = window.confirm("Would you like to play again?");
 
     if (playAgainConfirm) {
